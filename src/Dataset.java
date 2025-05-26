@@ -184,5 +184,182 @@ if(sortedByAttribute.equals("price")){//Si el dataset está ordenado por precio
         return games;
     }
 }
+ArrayList<Game> sortByAlgorithm(String algorithm, String attribute){
 
+        attribute = attribute.toLowerCase();
+        if(attribute != "price" && attribute != "category" && attribute != "quality"){
+            attribute = "price";
+        }
+
+        if (algorithm.equals("bubblesort")){
+            BubbleSort(data, attribute);
+        }else if (algorithm.equals("insertionSort")) {
+            InsertionSort(data, attribute);
+        }else if (algorithm.equals("selectionSort")) {
+            InsertionSort(data, attribute);
+        }else if (algorithm.equals("mergeSort")) {//O(n logn)
+            this.data = mergeSort(data, attribute);
+        }else if (algorithm.equals("quickSort")) {
+            quickSort(data, 0, data.size() - 1, attribute);
+        }else{//ordenamiento por Collections.sort()
+
+            if (attribute.equals("price")) {
+                data.sort(Comparator.comparingInt(Game::getPrice));
+            } else if (attribute.equals("quality")) {
+                data.sort(Comparator.comparingInt(Game::getQuality));
+            } else if (attribute.equals("category")) {
+                data.sort(Comparator.comparing(Game::getCategory));
+            }
+        }
+
+        this.sortedByAttribute = attribute;
+        return data;//retorna el arreglo ordenado
+    }
+//formas de ordenmiento
+//1)
+    ArrayList<Game> BubbleSort(ArrayList<Game> data, String attribute){//O(n^2)
+        int n = data.size();
+        boolean verificador;
+
+        for (int i = 0; i < n - 1; i++) {
+            verificador = false;
+
+            for (int j = 0; j < n - 1 - i; j++) {
+                boolean verificador2 = false;
+
+                //Determina mediante que va ordenar
+                if (attribute.equals("price")) {
+                    verificador2 = data.get(j).getPrice() > data.get(j + 1).getPrice();
+                }
+                else if (attribute.equals("quality")) {
+                    verificador2 = data.get(j).getQuality() > data.get(j + 1).getQuality();
+                }
+                else if (attribute.equals("category")) {
+                    verificador2 = data.get(j).getCategory().compareTo(data.get(j + 1).getCategory()) > 0;
+                }
+                if (verificador2) {
+                    // Intercambiar de juegos
+                    Game temp = data.get(j);
+                    data.set(j, data.get(j + 1));
+                    data.set(j + 1, temp);
+                    verificador = true;
+                }
+            }
+            if (!verificador) break;
+        }
+        return data;
+    }
+//2)
+    ArrayList<Game> InsertionSort(ArrayList<Game> data, String attribute) { //O(n^2)
+        int n = data.size();
+
+        for (int i = 1; i < n; i++) {
+            Game actual = data.get(i);
+            int j = i - 1;
+
+            // Comparación según el atributo
+            while (j >= 0 && debeIntercambiar(data.get(j), actual, attribute)) {
+                data.set(j + 1, data.get(j));  // Mueve el elemento una posición a la derecha
+                j--;
+            }
+
+            data.set(j + 1, actual);  // Inserta el elemento en su lugar correcto
+        }
+
+        return data;
+    }
+    private boolean debeIntercambiar(Game g1, Game g2, String attribute) {//se usa en InsertonSort y en QuickSort
+        switch (attribute) {
+            case "price":
+                return g1.getPrice() > g2.getPrice();
+            case "quality":
+                return g1.getQuality() > g2.getQuality();
+            case "category":
+                return g1.getCategory().compareTo(g2.getCategory()) > 0;
+            default:
+                throw new IllegalArgumentException("Atributo no válido: " + attribute);
+        }
+    }
+//3)
+    ArrayList<Game> mergeSort(ArrayList<Game> data, String attribute) {//O(n logn)
+        if (data.size() <= 1) return data;
+
+        int mid = data.size() / 2;
+
+        ArrayList<Game> left = new ArrayList<>(data.subList(0, mid));
+        ArrayList<Game> right = new ArrayList<>(data.subList(mid, data.size()));
+
+        left = mergeSort(left, attribute);
+        right = mergeSort(right, attribute);
+
+        return merge(left, right, attribute);
+    }
+    private ArrayList<Game> merge(ArrayList<Game> left, ArrayList<Game> right, String attribute) {
+        ArrayList<Game> merged = new ArrayList<>();
+        int i = 0, j = 0;
+
+        while (i < left.size() && j < right.size()) {
+            boolean condition ;
+            switch (attribute) {
+                case "price":
+                    condition = left.get(i).getPrice() <= right.get(j).getPrice();
+                    break;
+                case "quality":
+                    condition = left.get(i).getQuality() <= right.get(j).getQuality();
+                    break;
+                case "category":
+                    condition = left.get(i).getCategory().compareTo(right.get(j).getCategory()) <= 0;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Atributo no válido: " + attribute);
+            }
+
+            if (condition) {
+                merged.add(left.get(i));
+                i++;
+            } else {
+                merged.add(right.get(j));
+                j++;
+            }
+        }
+
+        // Agregar los elementos restantes
+        while (i < left.size()) merged.add(left.get(i++));
+        while (j < right.size()) merged.add(right.get(j++));
+
+        return merged;
+    }
+//4)
+    private void quickSort(ArrayList<Game> data, int low, int high, String attribute) {
+        if (low < high) {
+            int pi = partition(data, low, high, attribute);
+
+            quickSort(data, low, pi - 1, attribute);
+            quickSort(data, pi + 1, high, attribute);
+        }
+    }
+
+    private int partition(ArrayList<Game> data, int low, int high, String attribute) {
+        Game pivot = data.get(high);  // Elegimos el último elemento como pivote
+        int i = low - 1;
+
+        for (int j = low; j < high; j++) {
+            // Si el elemento j debe ir antes que el pivote según el atributo
+            if (!debeIntercambiar(data.get(j), pivot, attribute)) {
+                i++;
+                // Intercambiar data[i] y data[j]
+                Game temp = data.get(i);
+                data.set(i, data.get(j));
+                data.set(j, temp);
+            }
+        }
+        // Intercambiar data[i+1] y data[high] (colocar pivote en su lugar)
+        Game temp = data.get(i + 1);
+        data.set(i + 1, data.get(high));
+        data.set(high, temp);
+
+        return i + 1;
+    }
+
+  
 };

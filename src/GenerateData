@@ -1,0 +1,100 @@
+import java.util.ArrayList;
+import java.util.Random;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.FileWriter;
+
+public class GenerateData {
+
+    // Estas variables deben ser static para poder usarlas en métodos static
+    private static String[] palabras = {"Dragon", "Hollow", "Mario", "Lol", "Knight", "Ball", "Sport", "Valorant", "Bross"};
+    private static String[] categorias = {"Transilvania", "Shooter", "Rol", "Deportivo", "Acción", "Mundo Abierto", "RPG", "Estrategia"};
+    private static Random random = new Random();
+
+    private static String generarNombre() {
+        String palabra1 = palabras[random.nextInt(palabras.length)];
+        String palabra2 = palabras[random.nextInt(palabras.length)];
+        return palabra1 + palabra2;
+    }
+
+    public static ArrayList<Game> generarJuegos(int cantidad) {
+        ArrayList<Game> plataforma = new ArrayList<>();
+
+        for (int i = 0; i < cantidad; i++) {
+            String nombre = generarNombre();
+            String categoria = categorias[random.nextInt(categorias.length)];
+            int precio = random.nextInt(70001); // 0 a 70000
+            int calidad = random.nextInt(101);  // 0 a 100
+
+            Game juego = new Game(nombre, categoria, precio, calidad);
+            plataforma.add(juego);
+        }
+
+        return plataforma;
+    }
+    public static void guardarDatos(ArrayList<Game> juegos, String nombreArchivo) {
+
+        try(FileWriter writer = new FileWriter(nombreArchivo)) {
+
+            writer.write("Nombre,Categoria,Precio,Calidad\n");// encabezados de columans
+
+            for (Game juego : juegos) {
+                writer.write(juego.getName() + "," + juego.getCategory() + "," +
+                        juego.getPrice() + "," + juego.getQuality() + "\n");
+            }
+
+            System.out.println("El Archivo " + nombreArchivo + " ha sido guardado correctamente.");
+
+        }catch(IOException e) {
+            System.err.println("Error al guardar el archivo: " + e.getMessage());
+        }
+
+    }
+
+    public static ArrayList<Game> leerDatos(String nombreArchivo) {
+
+        ArrayList<Game> juegos = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {// leer linea por linea
+            String linea;
+
+            while ((linea = br.readLine()) != null) {
+                String[] partes = linea.split(",");
+
+                if (partes.length == 4) {
+                    String nombre = partes[0].trim();
+                    String categoria = partes[1].trim();
+                    int precio = Integer.parseInt(partes[2].trim());
+                    int calidad = Integer.parseInt(partes[3].trim());
+
+                    juegos.add(new Game(nombre, categoria, precio, calidad));
+                }
+            }
+
+        } catch (IOException e) {
+            System.err.println("Error al leer el archivo: " + e.getMessage());
+        }
+
+        return juegos;
+    }
+    public static void main(String[] args) {
+
+        //para crear los juegos
+        ArrayList<Game> juegos_100 = GenerateData.generarJuegos(100);
+        guardarDatos(juegos_100, "Juegos_100.csv");
+
+        ArrayList<Game> juegos_10000 = GenerateData.generarJuegos(10000);
+        guardarDatos(juegos_10000, "Juegos_10000.csv");
+
+        ArrayList<Game> juegos_1000000 = GenerateData.generarJuegos(1000000);
+        guardarDatos(juegos_1000000, "Juegos_1000000.csv");
+
+        //para leer los juegos
+        ArrayList<Game> juegos = GenerateData.leerDatos("Juegos_100.csv");
+
+        for (Game g : juegos) {
+            System.out.println(g.imprimir());//mostar los juegos
+        }
+    }
+}

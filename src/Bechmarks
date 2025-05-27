@@ -24,7 +24,7 @@ public class Bechmarks {
                 if (alg.equals("counting") && !atributo.equals("quality")) {
                     continue;
                 }
-                // Llamamos runAndTime con los datasets correctos
+                
                 long t1 = runAndTime(ds100, data100, alg, atributo);
                 long t2 = runAndTime(ds10k, data10k, alg, atributo);
                 long t3 = runAndTime(ds1M, data1M, alg, atributo);
@@ -56,7 +56,7 @@ public class Bechmarks {
                 Dataset ds = datasets[i];
                 ArrayList<Game> original = datos[i];
 
-                // Ordenar copia para búsqueda binaria
+               
                 ArrayList<Game> copiaOrdenada = new ArrayList<>(original);
                 ds.quickSortPublic(copiaOrdenada, atributo);
                 ds.sortedByAttribute = atributo;
@@ -75,7 +75,7 @@ public class Bechmarks {
                 }
                 long endBin = System.nanoTime();
 
-                // Forzar búsqueda lineal
+               
                 ds.sortedByAttribute = "dummy";
 
                 long startLin = System.nanoTime();
@@ -109,7 +109,7 @@ public class Bechmarks {
                 (algoritmo.equals("bubble") ||
                         algoritmo.equals("insertion") ||
                         algoritmo.equals("selection"))) {
-            return -1L; // Evitar algoritmos O(n^2) en datasets grandes
+            return -1L; 
         }
 
         ArrayList<Game> copia = new ArrayList<>(original);

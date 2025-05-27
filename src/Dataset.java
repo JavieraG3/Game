@@ -347,7 +347,7 @@ public class Dataset{
 
         return merged;
     }
-//4)
+//5)
     ArrayList<Game> quickSortPublic(ArrayList<Game> data, String attribute) {// se usa para comodidad del usuario
         quickSort(data, 0, data.size() - 1, attribute);
         return data;
@@ -383,7 +383,7 @@ public class Dataset{
 
         return i + 1;
     }
-//5)CollectionSort
+//6)CollectionSort
     ArrayList<Game> CollectionSort(ArrayList<Game> data, String attribute) {
         switch (attribute) {
             case "price":

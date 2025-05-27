@@ -142,7 +142,7 @@ public class Dataset {
         }
     }
 
-    ArrayList<Game> getGamesByCategory(String category){//Busqueda  binaria por categoria
+    public ArrayList<Game> getGamesByCategory(ArrayList<Game> lista, String category){//Busqueda  binaria por categoria
 
         if(sortedByAttribute.equals("category")){//Si el dataset está ordenado por precio
 
@@ -446,6 +446,36 @@ public class Dataset {
                 throw new IllegalArgumentException("Atributo no válido: " + attribute);
         }
         return data;
+    }
+    public void countingSort(ArrayList<Game> games) {
+        int maxQuality = 100;
+        int[] count = new int[maxQuality + 1];
+
+        // Paso 1: Contar ocurrencias de cada quality
+        for (Game g : games) {
+            count[g.getQuality()]++;
+        }
+
+        // Paso 2: Sumar acumuladamente
+        for (int i = 1; i <= maxQuality; i++) {
+            count[i] += count[i - 1];
+        }
+
+        // Paso 3: Crear array de salida ordenado
+        Game[] output = new Game[games.size()];
+        for (int i = games.size() - 1; i >= 0; i--) {
+            Game g = games.get(i);
+            int q = g.getQuality();
+            output[count[q] - 1] = g;
+            count[q]--;
+        }
+
+        // Paso 4: Copiar el resultado de nuevo a la lista original
+        for (int i = 0; i < games.size(); i++) {
+            games.set(i, output[i]);
+        }
+
+        this.sortedByAttribute = "quality";
     }
 
     public static void main(String[] args) {

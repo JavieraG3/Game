@@ -7,7 +7,6 @@ import java.io.FileWriter;
 
 public class GenerateData {
 
-    // Estas variables deben ser static para poder usarlas en métodos static
     private static String[] palabras = {"Dragon", "Hollow", "Mario", "Lol", "Knight", "Ball", "Sport", "Valorant", "Bross"};
     private static String[] categorias = {"Transilvania", "Shooter", "Rol", "Deportivo", "Acción", "Mundo Abierto", "RPG", "Estrategia"};
     private static Random random = new Random();
@@ -37,7 +36,7 @@ public class GenerateData {
 
         try(FileWriter writer = new FileWriter(nombreArchivo)) {
 
-            writer.write("Nombre,Categoria,Precio,Calidad\n");// encabezados de columans
+            writer.write("Nombre,Categoria,Precio,Calidad\n");
 
             for (Game juego : juegos) {
                 writer.write(juego.getName() + "," + juego.getCategory() + "," +
@@ -56,7 +55,7 @@ public class GenerateData {
 
         ArrayList<Game> juegos = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {// leer linea por linea
+        try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {
             String linea = br.readLine();
 
             while ((linea = br.readLine()) != null) {
@@ -80,7 +79,7 @@ public class GenerateData {
     }
     public static void main(String[] args) {
 
-    /*    //para crear los juegos
+    /*   
         ArrayList<Game> juegos_100 = GenerateData.generarJuegos(100);
         ArrayList<Game> juegos_10000 = GenerateData.generarJuegos(10000);
         ArrayList<Game> juegos_1000000 = GenerateData.generarJuegos(1000000);
@@ -89,7 +88,7 @@ public class GenerateData {
         guardarDatos(juegos_10000, "Juegos_10000.csv");
         guardarDatos(juegos_1000000, "Juegos_1000000.csv");
     */
-        //para leer los juegos
+        
         ArrayList<Game> juegos = GenerateData.leerDatos("Juegos_100.csv");
 
         for (int i = 0; i < juegos.size(); i++) {

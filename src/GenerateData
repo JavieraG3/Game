@@ -57,7 +57,7 @@ public class GenerateData {
         ArrayList<Game> juegos = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {// leer linea por linea
-            String linea;
+            String linea = br.readLine();
 
             while ((linea = br.readLine()) != null) {
                 String[] partes = linea.split(",");
@@ -80,21 +80,20 @@ public class GenerateData {
     }
     public static void main(String[] args) {
 
-        //para crear los juegos
+    /*    //para crear los juegos
         ArrayList<Game> juegos_100 = GenerateData.generarJuegos(100);
-        guardarDatos(juegos_100, "Juegos_100.csv");
-
         ArrayList<Game> juegos_10000 = GenerateData.generarJuegos(10000);
-        guardarDatos(juegos_10000, "Juegos_10000.csv");
-
         ArrayList<Game> juegos_1000000 = GenerateData.generarJuegos(1000000);
-        guardarDatos(juegos_1000000, "Juegos_1000000.csv");
 
+        guardarDatos(juegos_100, "Juegos_100.csv");
+        guardarDatos(juegos_10000, "Juegos_10000.csv");
+        guardarDatos(juegos_1000000, "Juegos_1000000.csv");
+    */
         //para leer los juegos
         ArrayList<Game> juegos = GenerateData.leerDatos("Juegos_100.csv");
 
-        for (Game g : juegos) {
-            System.out.println(g.imprimir());//mostar los juegos
+        for (int i = 0; i < juegos.size(); i++) {
+            System.out.println((i + 1) + ") : " + juegos.get(i).imprimir());
         }
     }
 }

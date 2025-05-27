@@ -59,7 +59,6 @@ public class Dataset {
         }
     }
 
-    // Similar corrección para getGamesByQuality
     public ArrayList<Game> getGamesByQuality(ArrayList<Game> lista, int quality) {
 
         if (sortedByAttribute.equals("quality")) {
@@ -253,8 +252,6 @@ public class Dataset {
         this.sortedByAttribute = attribute;
         return data;//retorna el arreglo ordenado
     }
-//formas de ordenmiento
-//1)
     ArrayList<Game> BubbleSort(ArrayList<Game> data, String attribute){//O(n^2)
         int n = data.size();
         boolean verificador;
@@ -265,7 +262,6 @@ public class Dataset {
             for (int j = 0; j < n - 1 - i; j++) {
                 boolean verificador2 = false;
 
-                //Determina mediante que va ordenar
                 if (attribute.equals("price")) {
                     verificador2 = data.get(j).getPrice() > data.get(j + 1).getPrice();
                 }
@@ -276,7 +272,6 @@ public class Dataset {
                     verificador2 = data.get(j).getCategory().compareTo(data.get(j + 1).getCategory()) > 0;
                 }
                 if (verificador2) {
-                    // Intercambiar de juegos
                     Game temp = data.get(j);
                     data.set(j, data.get(j + 1));
                     data.set(j + 1, temp);
@@ -287,26 +282,25 @@ public class Dataset {
         }
         return data;
     }
-//2)
-    ArrayList<Game> InsertionSort(ArrayList<Game> data, String attribute) { //O(n^2)
+
+    ArrayList<Game> InsertionSort(ArrayList<Game> data, String attribute) {
         int n = data.size();
 
         for (int i = 1; i < n; i++) {
             Game actual = data.get(i);
             int j = i - 1;
 
-            // Comparación según el atributo
             while (j >= 0 && debeIntercambiar(data.get(j), actual, attribute)) {
-                data.set(j + 1, data.get(j));  // Mueve el elemento una posición a la derecha
+                data.set(j + 1, data.get(j));  
                 j--;
             }
 
-            data.set(j + 1, actual);  // Inserta el elemento en su lugar correcto
+            data.set(j + 1, actual);  
         }
 
         return data;
     }
-    private boolean debeIntercambiar(Game g1, Game g2, String attribute) {//se usa en InsertonSort y en QuickSort
+    private boolean debeIntercambiar(Game g1, Game g2, String attribute) {
         switch (attribute) {
             case "price":
                 return g1.getPrice() > g2.getPrice();
@@ -318,7 +312,7 @@ public class Dataset {
                 throw new IllegalArgumentException("Atributo no válido: " + attribute);
         }
     }
-//3)
+
     ArrayList<Game> selectionSort(ArrayList<Game> data, String attribute) {
     int n = data.size();
 
@@ -384,14 +378,14 @@ public class Dataset {
             }
         }
 
-        // Agregar los elementos restantes
+       
         while (i < left.size()) merged.add(left.get(i++));
         while (j < right.size()) merged.add(right.get(j++));
 
         return merged;
     }
-//5)
-    ArrayList<Game> quickSortPublic(ArrayList<Game> data, String attribute) {// se usa para comodidad del usuario
+
+    ArrayList<Game> quickSortPublic(ArrayList<Game> data, String attribute) {
         quickSort(data, 0, data.size() - 1, attribute);
         return data;
     }
@@ -410,7 +404,7 @@ public class Dataset {
     }
 
     private int partition(ArrayList<Game> data, int low, int high, String attribute) {
-        // Usar el valor medio como pivote (más seguro)
+       
         Game pivot = data.get(low + (high - low) / 2);
 
         int i = low;
@@ -430,7 +424,7 @@ public class Dataset {
         }
         return i;
     }
-//6)CollectionSort
+
     ArrayList<Game> CollectionSort(ArrayList<Game> data, String attribute) {
         switch (attribute) {
             case "price":
@@ -451,17 +445,17 @@ public class Dataset {
         int maxQuality = 100;
         int[] count = new int[maxQuality + 1];
 
-        // Paso 1: Contar ocurrencias de cada quality
+       
         for (Game g : games) {
             count[g.getQuality()]++;
         }
 
-        // Paso 2: Sumar acumuladamente
+        
         for (int i = 1; i <= maxQuality; i++) {
             count[i] += count[i - 1];
         }
 
-        // Paso 3: Crear array de salida ordenado
+        
         Game[] output = new Game[games.size()];
         for (int i = games.size() - 1; i >= 0; i--) {
             Game g = games.get(i);
@@ -470,7 +464,7 @@ public class Dataset {
             count[q]--;
         }
 
-        // Paso 4: Copiar el resultado de nuevo a la lista original
+       
         for (int i = 0; i < games.size(); i++) {
             games.set(i, output[i]);
         }
@@ -496,28 +490,28 @@ public class Dataset {
             System.out.println(game.imprimir());
         }
 
-        // Probar InsertionSort por quality
+        
         System.out.println("\nInsertionSort por quality:");
         ArrayList<Game> sortedInsertion = dataset.InsertionSort(new ArrayList<>(juegos), "quality");
         for (Game game : sortedInsertion) {
             System.out.println(game.imprimir());
         }
 
-        // Probar SelectionSort por category
+        
         System.out.println("\nSelectionSort por category:");
         ArrayList<Game> sortedSelection = dataset.selectionSort(new ArrayList<>(juegos), "category");
         for (Game game : sortedSelection) {
             System.out.println(game.imprimir());
         }
 
-        // Probar MergeSort por price
+       
         System.out.println("\nMergeSort por price:");
         ArrayList<Game> sortedMerge = dataset.mergeSort(new ArrayList<>(juegos), "price");
         for (Game game : sortedMerge) {
             System.out.println(game.imprimir());
         }
 
-        // Probar QuickSort por quality
+      
         System.out.println("\nQuickSort por quality:");
         ArrayList<Game> sortedQuick = new ArrayList<>(juegos);
         dataset.quickSortPublic(sortedQuick, "quality");
@@ -525,7 +519,7 @@ public class Dataset {
             System.out.println(game.imprimir());
         }
 
-        // Probar CollectionSort por category
+       
         System.out.println("\nCollectionSort por category:");
         ArrayList<Game> sortedCollection = dataset.CollectionSort(new ArrayList<>(juegos), "category");
         for (Game game : sortedCollection) {

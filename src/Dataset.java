@@ -4,51 +4,94 @@ import java.util.Comparator;
 
 import static java.lang.Integer.compare;
 
-public class Dataset{
-    ArrayList<Game> data; //lista de videojuegos
-    public String sortedByAttribute; //indica x cual campo esta ordenado actualmente el dataset
+public class Dataset {
+    ArrayList<Game> data; // lista de videojuegos
+    public String sortedByAttribute = ""; // atributo por el que está ordenado
 
-    Dataset(ArrayList<Game> data){
+    public Dataset(ArrayList<Game> data) {
         this.data = data;
-
     }
 
-    ArrayList<Game> getGamesByPrice(int price) {//Busqueda binaria por precio
+    public ArrayList<Game> getGames() {
+        return data;
+    }
 
-        if(sortedByAttribute.equals("price")){//Si el dataset está ordenado por precio
 
-            //crear juego de referencia para buscar
-            Game prueba = new Game("","",price,0);
+    public ArrayList<Game> getGamesByPrice(ArrayList<Game> lista, int price) { // Busqueda binaria por precio
 
-            //Crear comparador de precios
-            Comparator<Game> comparatorPrice = (g1,g2) -> compare(g1.getPrice(), g2.getPrice());
-            int indice = Collections.binarySearch(data, prueba, comparatorPrice);//devuelve el indice no el objeto
-            ArrayList<Game> coincidencias = new ArrayList<>();//almacena todos los juegos con ese precio
-            if(indice >= 0){//si se encontro
-                System.out.println("El precio del juego coincide con el parametro entregado");
-                coincidencias.add(data.get(indice));// data.get(indice) devuelve el objeto como tal
+        if (sortedByAttribute.equals("price")) { // Si el dataset está ordenado por precio
 
-                //BUSCAR A LA IZQUIERDA MISMO PRECIO
+            Game prueba = new Game("", "", price, 0);
+
+            Comparator<Game> comparatorPrice = Comparator.comparingInt(Game::getPrice);
+
+            int indice = Collections.binarySearch(lista, prueba, comparatorPrice);
+            ArrayList<Game> coincidencias = new ArrayList<>();
+
+            if (indice >= 0) {
+                coincidencias.add(lista.get(indice));
+
+                // Buscar a la izquierda
                 int i = indice - 1;
-                while(i >= 0 && data.get(i).getPrice() == price){
-                    coincidencias.add(data.get(i));
+                while (i >= 0 && lista.get(i).getPrice() == price) {
+                    coincidencias.add(lista.get(i));
                     i--;
                 }
 
-                //BUSCAR A LA DERECHA MISMO PRECIO
+                // Buscar a la derecha
                 int j = indice + 1;
-                while(j < data.size() && data.get(j).getPrice() == price){
-                    coincidencias.add(data.get(j));
+                while (j < lista.size() && lista.get(j).getPrice() == price) {
+                    coincidencias.add(lista.get(j));
                     j++;
                 }
             }
             return coincidencias;
 
-        }else{
-            //BUSQUEDA LINEAL RECORRE 1 X 1 LA LISTA
+        } else {
+            // Búsqueda lineal
             ArrayList<Game> games = new ArrayList<>();
-            for(Game g1 : data){
-                if(g1.getPrice() == price){
+            for (Game g1 : lista) {
+                if (g1.getPrice() == price) {
+                    games.add(g1);
+                }
+            }
+            return games;
+        }
+    }
+
+    // Similar corrección para getGamesByQuality
+    public ArrayList<Game> getGamesByQuality(ArrayList<Game> lista, int quality) {
+
+        if (sortedByAttribute.equals("quality")) {
+
+            Game prueba = new Game("", "", 0, quality);
+
+            Comparator<Game> comparatorQuality = Comparator.comparingInt(Game::getQuality);
+
+            int indice = Collections.binarySearch(lista, prueba, comparatorQuality);
+            ArrayList<Game> coincidencias = new ArrayList<>();
+
+            if (indice >= 0) {
+                coincidencias.add(lista.get(indice));
+
+                int i = indice - 1;
+                while (i >= 0 && lista.get(i).getQuality() == quality) {
+                    coincidencias.add(lista.get(i));
+                    i--;
+                }
+
+                int j = indice + 1;
+                while (j < lista.size() && lista.get(j).getQuality() == quality) {
+                    coincidencias.add(lista.get(j));
+                    j++;
+                }
+            }
+            return coincidencias;
+
+        } else {
+            ArrayList<Game> games = new ArrayList<>();
+            for (Game g1 : lista) {
+                if (g1.getQuality() == quality) {
                     games.add(g1);
                 }
             }
@@ -357,31 +400,35 @@ public class Dataset{
         if (low < high) {
             int pi = partition(data, low, high, attribute);
 
-            quickSort(data, low, pi - 1, attribute);
-            quickSort(data, pi + 1, high, attribute);
+            if (low < pi - 1) {
+                quickSort(data, low, pi - 1, attribute);
+            }
+            if (pi < high) {
+                quickSort(data, pi, high, attribute);
+            }
         }
     }
 
     private int partition(ArrayList<Game> data, int low, int high, String attribute) {
-        Game pivot = data.get(high);  // Elegimos el último elemento como pivote
-        int i = low - 1;
+        // Usar el valor medio como pivote (más seguro)
+        Game pivot = data.get(low + (high - low) / 2);
 
-        for (int j = low; j < high; j++) {
-            // Si el elemento j debe ir antes que el pivote según el atributo
-            if (!debeIntercambiar(data.get(j), pivot, attribute)) {
-                i++;
-                // Intercambiar data[i] y data[j]
+        int i = low;
+        int j = high;
+
+        while (i <= j) {
+            while (debeIntercambiar(pivot, data.get(i), attribute)) i++;
+            while (debeIntercambiar(data.get(j), pivot, attribute)) j--;
+
+            if (i <= j) {
                 Game temp = data.get(i);
                 data.set(i, data.get(j));
                 data.set(j, temp);
+                i++;
+                j--;
             }
         }
-        // Intercambiar data[i+1] y data[high] (colocar pivote en su lugar)
-        Game temp = data.get(i + 1);
-        data.set(i + 1, data.get(high));
-        data.set(high, temp);
-
-        return i + 1;
+        return i;
     }
 //6)CollectionSort
     ArrayList<Game> CollectionSort(ArrayList<Game> data, String attribute) {
@@ -457,3 +504,4 @@ public class Dataset{
     }
 
 }
+

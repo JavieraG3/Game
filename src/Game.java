@@ -13,33 +13,24 @@ public class Game {
 
     void setName(String name) {
         this.name = name;
-    }
-
-    void setCategory(String category) {
+    }void setCategory(String category) {
         this.category = category;
-    }
-
-    void setPrice(int price) {
+    }void setPrice(int price) {
         this.price = price;
-    }
-
-    void setQuality(int quality) {
+    }void setQuality(int quality) {
         this.quality = quality;
     }
-
     String getName() {
-        return this.name;
+        return name;
+    }String getCategory() {
+        return category;
+    }int getPrice() {
+        return price;
+    }int getQuality() {
+        return quality;
+    }
+    public String imprimir() {
+        return name + "," + category + ", $" + price + "," + quality;
     }
 
-    String getCategory() {
-        return this.category;
-    }
-
-    int getPrice() {
-        return this.price;
-    }
-
-    int getQuality() {
-        return this.quality;
-    }
 }

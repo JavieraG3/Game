@@ -5,186 +5,188 @@ import java.util.Comparator;
 import static java.lang.Integer.compare;
 
 public class Dataset{
-  ArrayList<Game> data; //lista de videojuegos
-  public String sortedByAttribute; //indica x cual campo esta ordenado actualmente el dataset
+    ArrayList<Game> data; //lista de videojuegos
+    public String sortedByAttribute; //indica x cual campo esta ordenado actualmente el dataset
 
-  Dataset(ArrayList<Game> data){
-      this.data = data;
-  }
+    Dataset(ArrayList<Game> data){
+        this.data = data;
 
-ArrayList<Game> getGamesByPrice(int price) {
-//BUSQUEDA BINARIA divide la lista x la mitad
-
-    if(sortedByAttribute.equals("price")){//Si el dataset está ordenado por precio
-
-//crear juego de referencia para buscar
-        Game prueba = new Game("","",price,0);
-
-//Crear comparador de precios
-        Comparator<Game> comparatorPrice = (g1,g2) -> compare(g1.getPrice(), g2.getPrice());
-        int indice = Collections.binarySearch(data, prueba, comparatorPrice);//devuelve el indice no el objeto
-        ArrayList<Game> coincidencias = new ArrayList<>();//almacena todos los juegos con ese precio
-        if(indice >= 0){//si se encontro
-            System.out.println("El precio del juego coincide con el parametro entregado");
-            coincidencias.add(data.get(indice));// data.get(indice) devuelve el objeto como tal
-
-//BUSCAR A LA IZQUIERDA MISMO PRECIO
-            int i = indice - 1;
-            while(i >= 0 && data.get(i).getPrice() == price){
-                coincidencias.add(data.get(i));
-                i--;
-            }
-
-//BUSCAR A LA DERECHA MISMO PRECIO
-            int j = indice + 1;
-            while(j < data.size() && data.get(j).getPrice() == price){
-                coincidencias.add(data.get(j));
-                j++;
-            }
-        }
-        return coincidencias;
-
-    }else{
-//BUSQUEDA LINEAL RECORRE 1 X 1 LA LISTA
-        ArrayList<Game> games = new ArrayList<>();
-        for(Game g1 : data){
-            if(g1.getPrice() == price){
-                games.add(g1);
-            }
-        }
-        return games;
     }
-}
-ArrayList<Game> getGamesByQuality(int quality){
-    //BUSQUEDA BINARIA divide la lista x la mitad
 
-    if(sortedByAttribute.equals("quality")){//Si el dataset está ordenado por calidad
+    ArrayList<Game> getGamesByPrice(int price) {//Busqueda binaria por precio
 
-//crear juego de referencia para buscar
-        Game prueba = new Game("","",0,quality);
+        if(sortedByAttribute.equals("price")){//Si el dataset está ordenado por precio
 
-//Crear comparador de calidad
-        Comparator<Game> comparatorQuality = (g1,g2) -> compare(g1.getQuality(), g2.getQuality());
-        int indice = Collections.binarySearch(data, prueba, comparatorQuality);//devuelve el indice no el objeto
-        ArrayList<Game> coincidencias = new ArrayList<>();//almacena todos los juegos con esa calidad
-        if(indice >= 0){//si se encontro
-            System.out.println("La calidad del juego coincide con el parametro entregado");
-            coincidencias.add(data.get(indice));// data.get(indice) devuelve el objeto como tal
+            //crear juego de referencia para buscar
+            Game prueba = new Game("","",price,0);
 
-//BUSCAR A LA IZQUIERDA MISMA CALIDAD
-            int i = indice - 1;
-            while(i >= 0 && data.get(i).getQuality() == quality){
-                coincidencias.add(data.get(i));
-                i--;
+            //Crear comparador de precios
+            Comparator<Game> comparatorPrice = (g1,g2) -> compare(g1.getPrice(), g2.getPrice());
+            int indice = Collections.binarySearch(data, prueba, comparatorPrice);//devuelve el indice no el objeto
+            ArrayList<Game> coincidencias = new ArrayList<>();//almacena todos los juegos con ese precio
+            if(indice >= 0){//si se encontro
+                System.out.println("El precio del juego coincide con el parametro entregado");
+                coincidencias.add(data.get(indice));// data.get(indice) devuelve el objeto como tal
+
+                //BUSCAR A LA IZQUIERDA MISMO PRECIO
+                int i = indice - 1;
+                while(i >= 0 && data.get(i).getPrice() == price){
+                    coincidencias.add(data.get(i));
+                    i--;
+                }
+
+                //BUSCAR A LA DERECHA MISMO PRECIO
+                int j = indice + 1;
+                while(j < data.size() && data.get(j).getPrice() == price){
+                    coincidencias.add(data.get(j));
+                    j++;
+                }
             }
+            return coincidencias;
 
-//BUSCAR A LA DERECHA MISMA CALIDAD
-            int j = indice + 1;
-            while(j < data.size() && data.get(j).getQuality() == quality){
-                coincidencias.add(data.get(j));
-                j++;
+        }else{
+            //BUSQUEDA LINEAL RECORRE 1 X 1 LA LISTA
+            ArrayList<Game> games = new ArrayList<>();
+            for(Game g1 : data){
+                if(g1.getPrice() == price){
+                    games.add(g1);
+                }
             }
+            return games;
         }
-        return coincidencias;
-
-    }else{
-//BUSQUEDA LINEAL RECORRE 1 X 1 LA LISTA
-        ArrayList<Game> games = new ArrayList<>();
-        for(Game g1 : data){
-            if(g1.getQuality() == quality){
-                games.add(g1);
-            }
-        }
-        return games;
     }
-}
-ArrayList<Game> getGamesByCategory(String category){
-//BUSQUEDA BINARIA divide la lista x la mitad
 
-    if(sortedByAttribute.equals("category")){//Si el dataset está ordenado por precio
+    ArrayList<Game> getGamesByQuality(int quality){//Busqueda binaria por calidad
 
-//crear juego de referencia para buscar
-        Game prueba = new Game("",category,0,0);
+        if(sortedByAttribute.equals("quality")){//Si el dataset está ordenado por calidad
 
-//Crear comparador de categorias
-        Comparator<Game> comparatorCategory = (g1,g2) -> (g1.getCategory().compareTo(g2.getCategory()));
-        int indice = Collections.binarySearch(data, prueba, comparatorCategory);//devuelve el indice no el objeto
-        ArrayList<Game> coincidencias = new ArrayList<>();//almacena todos los juegos con esa categoria
-        if(indice >= 0){//si se encontro
-            System.out.println("La categoria del juego coincide con el parametro entregado");
-            coincidencias.add(data.get(indice));// data.get(indice) devuelve el objeto como tal
+            //crear juego de referencia para buscar
+            Game prueba = new Game("","",0,quality);
 
-//BUSCAR A LA IZQUIERDA MISMA CATEGORIA
-            int i = indice - 1;
-            while(i >= 0 && data.get(i).getCategory().equals(category)){
-                coincidencias.add(data.get(i));
-                i--;
+            //Crear comparador de calidad
+            Comparator<Game> comparatorQuality = (g1,g2) -> compare(g1.getQuality(), g2.getQuality());
+            int indice = Collections.binarySearch(data, prueba, comparatorQuality);//devuelve el indice no el objeto
+            ArrayList<Game> coincidencias = new ArrayList<>();//almacena todos los juegos con esa calidad
+            if(indice >= 0){//si se encontro
+                System.out.println("La calidad del juego coincide con el parametro entregado");
+                coincidencias.add(data.get(indice));// data.get(indice) devuelve el objeto como tal
+
+                //BUSCAR A LA IZQUIERDA MISMA CALIDAD
+                int i = indice - 1;
+                while(i >= 0 && data.get(i).getQuality() == quality){
+                    coincidencias.add(data.get(i));
+                    i--;
+                }
+
+                //BUSCAR A LA DERECHA MISMA CALIDAD
+                int j = indice + 1;
+                while(j < data.size() && data.get(j).getQuality() == quality){
+                    coincidencias.add(data.get(j));
+                    j++;
+                }
             }
+            return coincidencias;
 
-//BUSCAR A LA DERECHA MISMA CATEGORIA
-            int j = indice + 1;
-            while(j < data.size() && data.get(j).getCategory().equals(category)){
-                coincidencias.add(data.get(j));
-                j++;
+        }else{
+            //BUSQUEDA LINEAL RECORRE 1 X 1 LA LISTA
+            ArrayList<Game> games = new ArrayList<>();
+            for(Game g1 : data){
+                if(g1.getQuality() == quality){
+                    games.add(g1);
+                }
             }
+            return games;
         }
-        return coincidencias;
+    }
 
-    }else{
-//BUSQUEDA LINEAL RECORRE 1 X 1 LA LISTA
-        ArrayList<Game> games = new ArrayList<>();
-        for(Game g1 : data){
-            if(g1.getCategory().equals(category)){
-                games.add(g1);
+    ArrayList<Game> getGamesByCategory(String category){//Busqueda  binaria por categoria
+
+        if(sortedByAttribute.equals("category")){//Si el dataset está ordenado por precio
+
+            //crear juego de referencia para buscar
+            Game prueba = new Game("",category,0,0);
+
+            //Crear comparador de categorias
+            Comparator<Game> comparatorCategory = (g1,g2) -> (g1.getCategory().compareTo(g2.getCategory()));
+            int indice = Collections.binarySearch(data, prueba, comparatorCategory);//devuelve el indice no el objeto
+            ArrayList<Game> coincidencias = new ArrayList<>();//almacena todos los juegos con esa categoria
+            if(indice >= 0){//si se encontro
+                System.out.println("La categoria del juego coincide con el parametro entregado");
+                coincidencias.add(data.get(indice));// data.get(indice) devuelve el objeto como tal
+
+                //BUSCAR A LA IZQUIERDA MISMA CATEGORIA
+                int i = indice - 1;
+                while(i >= 0 && data.get(i).getCategory().equals(category)){
+                    coincidencias.add(data.get(i));
+                    i--;
+                }
+
+                //BUSCAR A LA DERECHA MISMA CATEGORIA
+                int j = indice + 1;
+                while(j < data.size() && data.get(j).getCategory().equals(category)){
+                    coincidencias.add(data.get(j));
+                    j++;
+                }
             }
+            return coincidencias;
+
+        }else{
+            //BUSQUEDA LINEAL RECORRE 1 X 1 LA LISTA
+            ArrayList<Game> games = new ArrayList<>();
+            for(Game g1 : data){
+                if(g1.getCategory().equals(category)){
+                    games.add(g1);
+                }
+            }
+            return games;
         }
-        return games;
     }
-}
 
-ArrayList<Game> getGamesByPriceRange(int lowerPrice, int higherPrice){
-//BUSQUEDA BINARIA POR RANGO
-if(sortedByAttribute.equals("price")){//Si el dataset está ordenado por precio
+    ArrayList<Game> getGamesByPriceRange(int lowerPrice, int higherPrice){//Busqueda binaria por Rango
 
-//crear juego de referencia para buscar el lowerprice
-    Game prueba = new Game("","",lowerPrice,0);
+        if(sortedByAttribute.equals("price")){//Si el dataset está ordenado por precio
 
-//Crear comparador de precios
-    Comparator<Game> comparatorPrice = (g1,g2) -> compare(g1.getPrice(), g2.getPrice());
-    int indice = Collections.binarySearch(data, prueba, comparatorPrice);//devuelve el indice no el objeto
-    ArrayList<Game> coincidencias = new ArrayList<>();//almacena todos los juegos en el rango
-    if(indice >= 0){//si se encontro el lowerprice
-        System.out.println("El precio del juego coincide con el lowerPrice");
-        coincidencias.add(data.get(indice));// data.get(indice) devuelve el objeto como tal
+            //crear juego de referencia para buscar el lowerprice
+            Game prueba = new Game("","",lowerPrice,0);
 
-//BUSCAR A LA DERECHA DE LOWERPRICE HASTA HIGHERPRICE
-        int i = indice;
-        while(i < data.size() && data.get(i).getPrice() <= higherPrice){
-            coincidencias.add(data.get(i));
-            i++;
+            //Crear comparador de precios
+            Comparator<Game> comparatorPrice = (g1,g2) -> compare(g1.getPrice(), g2.getPrice());
+
+            int indice = Collections.binarySearch(data, prueba, comparatorPrice);//devuelve el indice no el objeto
+
+            ArrayList<Game> coincidencias = new ArrayList<>();//almacena todos los juegos en el rango
+
+            if(indice >= 0){//si se encontro el lowerprice
+                System.out.println("El precio del juego coincide con el lowerPrice");
+                coincidencias.add(data.get(indice));// data.get(indice) devuelve el objeto como tal
+
+                //BUSCAR A LA DERECHA DE LOWERPRICE HASTA HIGHERPRICE
+                int i = indice;
+                while(i < data.size() && data.get(i).getPrice() <= higherPrice){
+                    coincidencias.add(data.get(i));
+                    i++;
+                }
+            }else if(indice<0){ //no encontro el loweprice, pero puede haber un precio en el rango
+                int insertPoint = -(indice+1); //se debe calcular punto de insercion
+                while(insertPoint < data.size() && data.get(insertPoint).getPrice() <= higherPrice){
+                    coincidencias.add(data.get(insertPoint));
+                    insertPoint++;
+                }
+            }
+            return coincidencias;
+
+        }else{
+            //BUSQUEDA LINEAL RECORRE 1 X 1 LA LISTA
+            ArrayList<Game> games = new ArrayList<>();//Arreglos con los juegos buscados dentro del rango
+            for(Game g1 : data){
+                if(g1.getPrice() >= lowerPrice && g1.getPrice() <= higherPrice){//busca en el rango
+                    games.add(g1);
+                }
+            }
+            return games;
         }
-    }else if(indice<0){ //no encontro el loweprice, pero puede haber un precio en el rango
-      int insertPoint = -(indice+1); //se debe calcular punto de insercion
-      while(insertPoint < data.size() && data.get(insertPoint).getPrice() <= higherPrice){
-          coincidencias.add(data.get(insertPoint));
-          insertPoint++;
-      }
     }
-    return coincidencias;
-
-}else{
-
-//BUSQUEDA LINEAL RECORRE 1 X 1 LA LISTA
-  ArrayList<Game> games = new ArrayList<>();
-    for(Game g1 : data){
-       if(g1.getPrice() >= lowerPrice && g1.getPrice() <= higherPrice){//busca en el rango
-          games.add(g1);
-        }
-      }
-        return games;
-    }
-}
-ArrayList<Game> sortByAlgorithm(String algorithm, String attribute){
+    ArrayList<Game> sortByAlgorithm(String algorithm, String attribute){
 
         attribute = attribute.toLowerCase();
         if(attribute != "price" && attribute != "category" && attribute != "quality"){
@@ -196,20 +198,13 @@ ArrayList<Game> sortByAlgorithm(String algorithm, String attribute){
         }else if (algorithm.equals("insertionSort")) {
             InsertionSort(data, attribute);
         }else if (algorithm.equals("selectionSort")) {
-            InsertionSort(data, attribute);
+            selectionSort(data, attribute);
         }else if (algorithm.equals("mergeSort")) {//O(n logn)
             this.data = mergeSort(data, attribute);
         }else if (algorithm.equals("quickSort")) {
             quickSort(data, 0, data.size() - 1, attribute);
         }else{//ordenamiento por Collections.sort()
-
-            if (attribute.equals("price")) {
-                data.sort(Comparator.comparingInt(Game::getPrice));
-            } else if (attribute.equals("quality")) {
-                data.sort(Comparator.comparingInt(Game::getQuality));
-            } else if (attribute.equals("category")) {
-                data.sort(Comparator.comparing(Game::getCategory));
-            }
+            CollectionSort(data, attribute);
         }
 
         this.sortedByAttribute = attribute;
@@ -281,6 +276,29 @@ ArrayList<Game> sortByAlgorithm(String algorithm, String attribute){
         }
     }
 //3)
+    ArrayList<Game> selectionSort(ArrayList<Game> data, String attribute) {
+    int n = data.size();
+
+    for (int i = 0; i < n - 1; i++) {
+        int minimo = i;
+
+        for (int j = i + 1; j < n; j++) {
+            if (debeIntercambiar(data.get(minimo), data.get(j), attribute)) {
+                minimo = j;
+            }
+        }
+
+        if (minimo!= i) {
+            Game temp = data.get(i);
+            data.set(i, data.get(minimo));
+            data.set(minimo, temp);
+        }
+    }
+
+    return data;
+}
+
+//4)
     ArrayList<Game> mergeSort(ArrayList<Game> data, String attribute) {//O(n logn)
         if (data.size() <= 1) return data;
 
@@ -330,6 +348,11 @@ ArrayList<Game> sortByAlgorithm(String algorithm, String attribute){
         return merged;
     }
 //4)
+    ArrayList<Game> quickSortPublic(ArrayList<Game> data, String attribute) {// se usa para comodidad del usuario
+        quickSort(data, 0, data.size() - 1, attribute);
+        return data;
+    }
+
     private void quickSort(ArrayList<Game> data, int low, int high, String attribute) {
         if (low < high) {
             int pi = partition(data, low, high, attribute);
@@ -360,6 +383,77 @@ ArrayList<Game> sortByAlgorithm(String algorithm, String attribute){
 
         return i + 1;
     }
+//5)CollectionSort
+    ArrayList<Game> CollectionSort(ArrayList<Game> data, String attribute) {
+        switch (attribute) {
+            case "price":
+                data.sort(Comparator.comparingInt(Game::getPrice));
+                break;
+            case "quality":
+                data.sort(Comparator.comparingInt(Game::getQuality));
+                break;
+            case "category":
+                data.sort(Comparator.comparing(Game::getCategory));
+                break;
+            default:
+                throw new IllegalArgumentException("Atributo no válido: " + attribute);
+        }
+        return data;
+    }
 
-  
-};
+    public static void main(String[] args) {
+
+        ArrayList<Game> juegos = new ArrayList<>();
+        juegos.add(new Game("juego1", "Action", 5500, 80));
+        juegos.add(new Game("juego2", "shooter", 40000, 70));
+        juegos.add(new Game("juego3", "Action", 69800, 90));
+        juegos.add(new Game("juego4", "transilvania", 30, 60));
+        juegos.add(new Game("juego5", "Adventure", 500, 80));
+
+        Dataset dataset = new Dataset(juegos);
+
+
+        System.out.println("BubbleSort por price:");
+        ArrayList<Game> sortedBubble = dataset.BubbleSort(new ArrayList<>(juegos), "price");
+        for (Game game : sortedBubble) {
+            System.out.println(game.imprimir());
+        }
+
+        // Probar InsertionSort por quality
+        System.out.println("\nInsertionSort por quality:");
+        ArrayList<Game> sortedInsertion = dataset.InsertionSort(new ArrayList<>(juegos), "quality");
+        for (Game game : sortedInsertion) {
+            System.out.println(game.imprimir());
+        }
+
+        // Probar SelectionSort por category
+        System.out.println("\nSelectionSort por category:");
+        ArrayList<Game> sortedSelection = dataset.selectionSort(new ArrayList<>(juegos), "category");
+        for (Game game : sortedSelection) {
+            System.out.println(game.imprimir());
+        }
+
+        // Probar MergeSort por price
+        System.out.println("\nMergeSort por price:");
+        ArrayList<Game> sortedMerge = dataset.mergeSort(new ArrayList<>(juegos), "price");
+        for (Game game : sortedMerge) {
+            System.out.println(game.imprimir());
+        }
+
+        // Probar QuickSort por quality
+        System.out.println("\nQuickSort por quality:");
+        ArrayList<Game> sortedQuick = new ArrayList<>(juegos);
+        dataset.quickSortPublic(sortedQuick, "quality");
+        for (Game game : sortedQuick) {
+            System.out.println(game.imprimir());
+        }
+
+        // Probar CollectionSort por category
+        System.out.println("\nCollectionSort por category:");
+        ArrayList<Game> sortedCollection = dataset.CollectionSort(new ArrayList<>(juegos), "category");
+        for (Game game : sortedCollection) {
+            System.out.println(game.imprimir());
+        }
+    }
+
+}

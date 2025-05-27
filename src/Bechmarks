@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Bechmarks {
     public static void main(String[] args) {
-        // 1) Cargo los datos y creo Dataset
+
         ArrayList<Game> data100 = GenerateData.leerDatos("Juegos_100.csv");
         ArrayList<Game> data10k = GenerateData.leerDatos("Juegos_10000.csv");
         ArrayList<Game> data1M = GenerateData.leerDatos("Juegos_1000000.csv");
@@ -11,8 +11,7 @@ public class Bechmarks {
         Dataset ds10k = new Dataset(new ArrayList<>(data10k));
         Dataset ds1M = new Dataset(new ArrayList<>(data1M));
 
-        // 2) Define algoritmos y atributos
-        String[] algoritmos = {"bubble", "insertion", "selection", "merge", "quick", "collections"};
+        String[] algoritmos = {"bubble", "insertion", "selection", "merge", "quick", "collections","counting"};
 
         String[] atributos = {"price", "quality", "category"};
 
@@ -22,6 +21,9 @@ public class Bechmarks {
             System.out.println("Algoritmo\t100\t10000\t1M");
 
             for (String alg : algoritmos) {
+                if (alg.equals("counting") && !atributo.equals("quality")) {
+                    continue;
+                }
                 // Llamamos runAndTime con los datasets correctos
                 long t1 = runAndTime(ds100, data100, alg, atributo);
                 long t2 = runAndTime(ds10k, data10k, alg, atributo);
@@ -36,14 +38,13 @@ public class Bechmarks {
             }
         }
 
-        // 4) Benchmark búsqueda
         System.out.println("\n=== Benchmark búsquedas ===");
         String[] atributosBusqueda = {"price", "quality", "category"};
 
         int valorBuscarPrice = data100.get(0).getPrice();
         int valorBuscarQuality = data100.get(0).getQuality();
         String valorBuscarCategory = data100.get(0).getCategory();
-//chat gpt
+
         Dataset[] datasets = {ds100, ds10k, ds1M};
         ArrayList<Game>[] datos = new ArrayList[]{data100, data10k, data1M};
 
@@ -91,14 +92,14 @@ public class Bechmarks {
                 }
                 long endLin = System.nanoTime();
 
-                long tiempoBin = (endBin - startBin) / 1_000_000;
-                long tiempoLin = (endLin - startLin) / 1_000_000;
+                long tiempoBin = (endBin - startBin) / 1_000;
+                long tiempoLin = (endLin - startLin) / 1_000;
 
                 System.out.printf("%-12s\t%12d\t%11d\n",
                         original.size() + " juegos", tiempoBin, tiempoLin);
             }
         }
-    //chat gpt
+
     }
 
     private static long runAndTime(Dataset ds, ArrayList<Game> original, String algoritmo, String atributo) {
@@ -133,10 +134,16 @@ public class Bechmarks {
             case "collections":
                 ds.CollectionSort(copia, atributo);
                 break;
+            case "counting":
+                if (!atributo.equals("quality")) {
+                    throw new IllegalArgumentException("Counting Sort solo soporta el atributo 'quality'");
+                }
+                ds.countingSort(copia);
+                break;
             default:
                 throw new IllegalArgumentException("Alg desconocido: " + algoritmo);
         }
         long end = System.nanoTime();
-        return (end - start) / 1_000_000;
+        return (end - start) / 1_000;
     }
 }
